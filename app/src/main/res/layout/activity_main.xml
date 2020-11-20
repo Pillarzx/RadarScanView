@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn"
+        android:text="Start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.radar.widget.RadarScanView
+        android:id="@+id/radar_scan"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:circleColor="#8aa8ff"
+        app:circleWidth="1"
+        app:tailColor="#8aa8ff" />
+</LinearLayout>
