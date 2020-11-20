@@ -5,7 +5,7 @@ Android RadarScanView , An easy-to-use view, can be used for any scanning operat
 
 # Preview
 
-![screen](https://github.com/Pillarzx/RadarScanView/blob/main/img/screen.gif)
+<img src="https://github.com/Pillarzx/RadarScanView/blob/main/img/screen.gif" width="240" height="360">
 
 # How to
 
