@@ -16,7 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * @author Zhangxian
+ * @author Pillarzx
  * @date 2020/3/27 11:58
  */
 public class RadarScanView extends View {
@@ -29,9 +29,7 @@ public class RadarScanView extends View {
     private int centerX;
     private int centerY;
     private int radarRadius;
-    private int circleColor = Color.parseColor("#a2a2a2");
-    private int radarColor = Color.parseColor("#99a2a2a2");
-    private int tailColor = Color.parseColor("#FFaaaaaa");
+
     private int startAngle = 10;
     private int startAngle2 = 20;
 
@@ -39,11 +37,18 @@ public class RadarScanView extends View {
     private OnScanStateChangeListener onScanStateChangeListener;
     private Boolean canClickToStart = false; //是否可点击启动扫描
 
+    private int CIRCLE_COLOR;//圆环颜色
+    private int RADAR_COLOR; //雷达中心颜色
+    private int TAIL_COLOR; //扫描线颜色
+
     //雷达内部圆环画笔宽度
-    private int circleWidth = 1;
-    //雷达外部内圆环
-    private int innerRingStrokeWidth = 6;
-    private int outerRingStrokeWidth = 3;
+    private int CIRCLE_WIDTH;
+    //雷达外部圆环
+    private int INNER_RING_STROKE_WIDTH;
+    private int OUTER_RING_STROKE_WIDTH;
+    //透明度
+    private int INNER_RING_STROKE_ALPHA;
+    private int OUTER_RING_STROKE_ALPHA;
 
     private Paint mPaintCircle;
     private Paint mPaintRadar;
@@ -79,14 +84,6 @@ public class RadarScanView extends View {
         init(attrs, context);
     }
 
-    public void setOnScanClickListener(OnScanClickListener onScanClickListener) {
-        this.onScanClickListener = onScanClickListener;
-    }
-
-    public void setOnScanStateChangeListener(OnScanStateChangeListener onScanStateChangeListener) {
-        this.onScanStateChangeListener = onScanStateChangeListener;
-    }
-
     @TargetApi(21)
     public RadarScanView(Context context, AttributeSet attrs, int defStyleAttr,
                          int defStyleRes) {
@@ -106,10 +103,14 @@ public class RadarScanView extends View {
         if (attrs != null) {
             TypedArray ta = context.obtainStyledAttributes(attrs,
                     R.styleable.RadarScanView);
-            circleColor = ta.getColor(R.styleable.RadarScanView_circleColor, circleColor);
-            radarColor = ta.getColor(R.styleable.RadarScanView_radarColor, radarColor);
-            tailColor = ta.getColor(R.styleable.RadarScanView_tailColor, tailColor);
-            circleWidth = ta.getInteger(R.styleable.RadarScanView_circleWidth, circleWidth);
+            CIRCLE_COLOR = ta.getColor(R.styleable.RadarScanView_circleColor, Color.parseColor("#a2a2a2"));
+            RADAR_COLOR = ta.getColor(R.styleable.RadarScanView_radarColor, Color.parseColor("#99a2a2a2"));
+            TAIL_COLOR = ta.getColor(R.styleable.RadarScanView_tailColor, Color.parseColor("#FFaaaaaa"));
+            CIRCLE_WIDTH = ta.getInteger(R.styleable.RadarScanView_circleWidth, 1);
+            INNER_RING_STROKE_ALPHA =ta.getInteger(R.styleable.RadarScanView_innerRingAlpha,94);
+            OUTER_RING_STROKE_ALPHA =ta.getInteger(R.styleable.RadarScanView_outerRingAlpha,64);
+            INNER_RING_STROKE_WIDTH=ta.getInteger(R.styleable.RadarScanView_innerRingWidth,6);
+            OUTER_RING_STROKE_WIDTH=ta.getInteger(R.styleable.RadarScanView_outerRingWidth,4);
             ta.recycle();
         }
 
@@ -125,29 +126,28 @@ public class RadarScanView extends View {
 
     private void initPaint() {
         mPaintCircle = new Paint();
-        mPaintCircle.setColor(circleColor);
+        mPaintCircle.setColor(CIRCLE_COLOR);
         mPaintCircle.setAlpha(100);
         mPaintCircle.setAntiAlias(true);//抗锯齿
         mPaintCircle.setStyle(Paint.Style.STROKE);//设置实心
-        mPaintCircle.setStrokeWidth(circleWidth);//画笔宽度
+        mPaintCircle.setStrokeWidth(CIRCLE_WIDTH);//画笔宽度
 
-        //TODO 雷达外部内圆环改成属性
         mPaintInnerRing = new Paint();
-        mPaintInnerRing.setColor(tailColor);
-        mPaintInnerRing.setAlpha(94);
+        mPaintInnerRing.setColor(TAIL_COLOR);
+        mPaintInnerRing.setAlpha(INNER_RING_STROKE_ALPHA);
         mPaintInnerRing.setAntiAlias(true);
         mPaintInnerRing.setStyle(Paint.Style.STROKE);
-        mPaintInnerRing.setStrokeWidth(innerRingStrokeWidth);
+        mPaintInnerRing.setStrokeWidth(INNER_RING_STROKE_WIDTH);
 
         mPaintOuterRing = new Paint();
-        mPaintOuterRing.setColor(tailColor);
-        mPaintOuterRing.setAlpha(43);
+        mPaintOuterRing.setColor(TAIL_COLOR);
+        mPaintOuterRing.setAlpha(OUTER_RING_STROKE_ALPHA);
         mPaintOuterRing.setAntiAlias(true);
         mPaintOuterRing.setStyle(Paint.Style.STROKE);
-        mPaintOuterRing.setStrokeWidth(outerRingStrokeWidth);
+        mPaintOuterRing.setStrokeWidth(OUTER_RING_STROKE_WIDTH);
 
         mPaintRadar = new Paint();
-        mPaintRadar.setColor(radarColor);
+        mPaintRadar.setColor(RADAR_COLOR);
         mPaintRadar.setAntiAlias(true);
 
     }
@@ -195,7 +195,7 @@ public class RadarScanView extends View {
         canvas.drawCircle(centerX, centerY, 3 * radarRadius / 7, mPaintCircle);
 
         //设置颜色渐变从透明到不透明
-        Shader shader = new SweepGradient(centerX, centerY, Color.TRANSPARENT, tailColor);
+        Shader shader = new SweepGradient(centerX, centerY, Color.TRANSPARENT, TAIL_COLOR);
         mPaintRadar.setShader(shader);
         canvas.concat(matrix);
         canvas.drawCircle(centerX, centerY, 3 * radarRadius / 7, mPaintRadar);
@@ -252,6 +252,59 @@ public class RadarScanView extends View {
     private int px2dip(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
+    }
+
+    public void setOnScanClickListener(OnScanClickListener onScanClickListener) {
+        this.onScanClickListener = onScanClickListener;
+    }
+
+    public RadarScanView setOnScanStateChangeListener(OnScanStateChangeListener onScanStateChangeListener) {
+        this.onScanStateChangeListener = onScanStateChangeListener;
+        return this;
+    }
+
+    public RadarScanView setCircleColor(String circleColor) {
+        this.CIRCLE_COLOR = Color.parseColor(circleColor);
+        return this;
+    }
+
+    public RadarScanView setRadarColor(String radarColor) {
+        this.RADAR_COLOR = Color.parseColor(radarColor);
+        return this;
+    }
+
+    public RadarScanView setTailColor(String tailColor) {
+        this.TAIL_COLOR = Color.parseColor(tailColor);
+        return this;
+    }
+
+    public RadarScanView setCircleWidth(int circleWidth) {
+        this.CIRCLE_WIDTH = circleWidth;
+        return this;
+    }
+
+    public RadarScanView setInnerRingStrokeWidth(int innerRingStrokeWidth) {
+        this.INNER_RING_STROKE_WIDTH = innerRingStrokeWidth;
+        return this;
+    }
+
+    public RadarScanView setOuterRingStrokeWidth(int outerRingStrokeWidth) {
+        this.OUTER_RING_STROKE_WIDTH = outerRingStrokeWidth;
+        return this;
+    }
+
+    public RadarScanView setInnerRingStrokeAlpha(int innerRingStrokeAlpha) {
+        this.INNER_RING_STROKE_ALPHA = innerRingStrokeAlpha;
+        return this;
+    }
+
+    public RadarScanView setOuterRingStrokeAlpha(int outerRingStrokeAlpha) {
+        this.OUTER_RING_STROKE_ALPHA = outerRingStrokeAlpha;
+        return this;
+    }
+
+    public void build(){
+        initPaint();
     }
 
     /**

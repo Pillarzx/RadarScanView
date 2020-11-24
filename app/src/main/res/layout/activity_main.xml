@@ -14,12 +14,22 @@
         android:text="Start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn2"
+        android:text="change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <com.radar.widget.RadarScanView
         android:id="@+id/radar_scan"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        app:circleColor="#8aa8ff"
+        app:circleColor="#FFEB3B"
         app:circleWidth="1"
-        app:tailColor="#8aa8ff" />
+        app:tailColor="#8aa8ff"
+        app:radarColor="#99a2a2a2"
+        app:innerRingAlpha="94"
+        app:outerRingAlpha="64"
+        app:innerRingWidth="6"
+        app:outerRingWidth="4"/>
 </LinearLayout>

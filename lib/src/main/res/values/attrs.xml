@@ -6,5 +6,9 @@
         <attr name="radarColor" format="color"/>
         <attr name="tailColor" format="color"/>
         <attr name="circleWidth" format="integer"/>
+        <attr name="innerRingAlpha" format="integer"/>
+        <attr name="outerRingAlpha" format="integer"/>
+        <attr name="innerRingWidth" format="integer"/>
+        <attr name="outerRingWidth" format="integer"/>
     </declare-styleable>
 </resources>
