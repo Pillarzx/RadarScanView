@@ -10,6 +10,7 @@ import com.radar.widget.RadarScanView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int mSpeed=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout linearLayout = findViewById(R.id.root);
         MaterialButton button = findViewById(R.id.btn);
         MaterialButton button2 = findViewById(R.id.btn2);
+        MaterialButton button3 = findViewById(R.id.btn3);
         RadarScanView radarScanView = findViewById(R.id.radar_scan);
 
         radarScanView.setCanClickToStart(true)
@@ -40,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
                     .setOuterRingStrokeWidth(5)
                     .setOuterRingStrokeAlpha(94)
                     .build();
+        });
+        button3.setOnClickListener(view -> {
+            radarScanView.setRingSpeed(mSpeed--);
         });
     }
 }

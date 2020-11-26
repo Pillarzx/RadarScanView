@@ -49,6 +49,9 @@ public class RadarScanView extends View {
     //透明度
     private int INNER_RING_STROKE_ALPHA;
     private int OUTER_RING_STROKE_ALPHA;
+    //转速
+    private int COMMON_SPEED; //1-30
+    private int RING_SPEED; //1-30
 
     private Paint mPaintCircle;
     private Paint mPaintRadar;
@@ -56,12 +59,16 @@ public class RadarScanView extends View {
     private Paint mPaintOuterRing;
     private Matrix matrix;
 
+    private Shader shader;
+    private RectF rectF1;
+    private RectF rectF2;
+
     private boolean isThreadRunning = false;
     private Handler handler = new Handler();
     private Runnable run = new Runnable() {
         @Override
         public void run() {
-            start += 3;
+            start += COMMON_SPEED;
             matrix = new Matrix();
             matrix.postRotate(start, centerX, centerY);
             postInvalidate();
@@ -97,6 +104,9 @@ public class RadarScanView extends View {
         centerX = w / 2;
         centerY = h / 2;
         radarRadius = Math.min(w, h) - 30;
+        shader = new SweepGradient(centerX, centerY, Color.TRANSPARENT, TAIL_COLOR);
+        rectF1 = new RectF(15, 15, centerX * 2 - 15, centerY * 2 - 15);
+        rectF2 = new RectF(2, 2, centerX * 2 - 2, centerY * 2 - 2);
     }
 
     private void init(AttributeSet attrs, Context context) {
@@ -111,6 +121,8 @@ public class RadarScanView extends View {
             OUTER_RING_STROKE_ALPHA =ta.getInteger(R.styleable.RadarScanView_outerRingAlpha,64);
             INNER_RING_STROKE_WIDTH=ta.getInteger(R.styleable.RadarScanView_innerRingWidth,6);
             OUTER_RING_STROKE_WIDTH=ta.getInteger(R.styleable.RadarScanView_outerRingWidth,4);
+            COMMON_SPEED=ta.getInteger(R.styleable.RadarScanView_commonSpeed,3);
+            RING_SPEED=ta.getInteger(R.styleable.RadarScanView_ringSpeed,5);
             ta.recycle();
         }
 
@@ -186,28 +198,27 @@ public class RadarScanView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        startAngle = (startAngle - 5) % 360;
-        startAngle2 = (startAngle2 + 1) % 360;
+        startAngle = (startAngle - RING_SPEED) % 360;
+        startAngle2 = (startAngle2 + RING_SPEED) % 360;
+        canvas.save();
         //分别绘制四个圆
-        canvas.drawCircle(centerX, centerY, radarRadius / 7, mPaintCircle);
-        canvas.drawCircle(centerX, centerY, radarRadius / 4, mPaintCircle);
-        canvas.drawCircle(centerX, centerY, radarRadius / 3, mPaintCircle);
-        canvas.drawCircle(centerX, centerY, 3 * radarRadius / 7, mPaintCircle);
+        canvas.drawCircle(centerX, centerY, radarRadius / 7f, mPaintCircle);
+        canvas.drawCircle(centerX, centerY, radarRadius / 4f, mPaintCircle);
+        canvas.drawCircle(centerX, centerY, radarRadius / 3f, mPaintCircle);
+        canvas.drawCircle(centerX, centerY, 3 * radarRadius / 7f, mPaintCircle);
 
         //设置颜色渐变从透明到不透明
-        Shader shader = new SweepGradient(centerX, centerY, Color.TRANSPARENT, TAIL_COLOR);
         mPaintRadar.setShader(shader);
         canvas.concat(matrix);
-        canvas.drawCircle(centerX, centerY, 3 * radarRadius / 7, mPaintRadar);
+        canvas.drawCircle(centerX, centerY, 3 * radarRadius / 7f, mPaintRadar);
 
+        canvas.restore();
         //绘制雷达外部内环
-        RectF rectF1 = new RectF(15, 15, centerX * 2 - 15, centerY * 2 - 15);
         canvas.drawArc(rectF1, startAngle, 60, false, mPaintInnerRing);
         canvas.drawArc(rectF1, startAngle + 120, 60, false, mPaintInnerRing);
         canvas.drawArc(rectF1, startAngle + 240, 60, false, mPaintInnerRing);
 
         //绘制雷达外部外环
-        RectF rectF2 = new RectF(2, 2, centerX * 2 - 2, centerY * 2 - 2);
         canvas.drawArc(rectF2, startAngle2, 80, false, mPaintOuterRing);
         canvas.drawArc(rectF2, startAngle2 + 120, 80, false, mPaintOuterRing);
         canvas.drawArc(rectF2, startAngle2 + 240, 80, false, mPaintOuterRing);
@@ -300,6 +311,16 @@ public class RadarScanView extends View {
 
     public RadarScanView setOuterRingStrokeAlpha(int outerRingStrokeAlpha) {
         this.OUTER_RING_STROKE_ALPHA = outerRingStrokeAlpha;
+        return this;
+    }
+
+    public RadarScanView setCommonSpeed(int commonSpeed) {
+        this.COMMON_SPEED = commonSpeed;
+        return this;
+    }
+
+    public RadarScanView setRingSpeed(int ringSpeed) {
+        this.RING_SPEED = ringSpeed;
         return this;
     }
 

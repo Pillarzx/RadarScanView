@@ -10,5 +10,7 @@
         <attr name="outerRingAlpha" format="integer"/>
         <attr name="innerRingWidth" format="integer"/>
         <attr name="outerRingWidth" format="integer"/>
+        <attr name="commonSpeed" format="integer"/>
+        <attr name="ringSpeed" format="integer"/>
     </declare-styleable>
 </resources>

@@ -19,12 +19,17 @@
         android:text="change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn3"
+        android:text="speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <com.radar.widget.RadarScanView
         android:id="@+id/radar_scan"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        app:circleColor="#FFEB3B"
+        app:circleColor="#2196F3"
         app:circleWidth="1"
         app:tailColor="#8aa8ff"
         app:radarColor="#99a2a2a2"
