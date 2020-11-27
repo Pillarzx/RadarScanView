@@ -1,6 +1,10 @@
 # RadarScanView
 Android RadarScanView , An easy-to-use view, can be used for any scanning operation view.  雷达扫描视图
 
+```html
+[![](https://jitpack.io/v/Pillarzx/RadarScanView.svg)](https://jitpack.io/#Pillarzx/RadarScanView)
+```
+
 
 
 # Preview
@@ -80,8 +84,8 @@ radarScanView.getScanState(); //Get the scan state of the animation
 radarScanView.startScan(); //Start to scan
 radarScanView.stopScan(); //Stop to scan
 radarScanView.setOnScanClickListener(view -> { /*TODO*/ })  
-radarScanView.setRingSpeed(5); //set ring speed
-radarScanView.setCommonSpeed(3); //set scan line speed
+radarScanView.setRingSpeed(5); //set ring speed（recommend range 1-30）
+radarScanView.setCommonSpeed(3); //set scan line speed（recommend range 1-30）
 radarScanView
     .setCircleColor("#FFCDDC39")
 	.setCircleWidth(2)
