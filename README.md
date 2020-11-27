@@ -1,11 +1,7 @@
 # RadarScanView
 Android RadarScanView , An easy-to-use view, can be used for any scanning operation view.  雷达扫描视图
 
-```html
 [![](https://jitpack.io/v/Pillarzx/RadarScanView.svg)](https://jitpack.io/#Pillarzx/RadarScanView)
-```
-
-
 
 # Preview
 
