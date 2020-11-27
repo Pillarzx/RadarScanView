@@ -28,7 +28,7 @@ Add it in your root build.gradle at the end of repositories:
 
 ```groovy
 	dependencies {
-	        implementation 'com.github.Pillarzx:RadarScanView:1.1.0'
+	        implementation 'com.github.Pillarzx:RadarScanView:1.2.0'
 	}
 ```
 
@@ -65,6 +65,8 @@ Add it in your root build.gradle at the end of repositories:
 | outerRingAlpha | Alpha for the second ring out of radar |
 | innerRingWidth | width for the first ring out of radar  |
 | outerRingWidth | width for the second ring out of radar |
+|  commonSpeed   |          speed for scan line           |
+|   ringSpeed    |             speed for ring             |
 
 
 
@@ -78,6 +80,8 @@ radarScanView.getScanState(); //Get the scan state of the animation
 radarScanView.startScan(); //Start to scan
 radarScanView.stopScan(); //Stop to scan
 radarScanView.setOnScanClickListener(view -> { /*TODO*/ })  
+radarScanView.setRingSpeed(5); //set ring speed
+radarScanView.setCommonSpeed(3); //set scan line speed
 radarScanView
     .setCircleColor("#FFCDDC39")
 	.setCircleWidth(2)
@@ -99,10 +103,15 @@ radarScanView
 
   Release the first edition
 
-- V1.1.0  2020.11.24
+- **V1.1.0**  2020.11.24
 
   1. Add some new XML attrbutes.
   2. Add new methods for the class.
+  
+- **V1.2.0** 2020.11.27
+
+  1. Add speed attributes
+  2. Adjust animation logic
 
 
 
